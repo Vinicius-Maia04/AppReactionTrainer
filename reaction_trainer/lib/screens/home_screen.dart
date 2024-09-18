@@ -2,28 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:reaction_trainer/screens/history_screen.dart';
 import 'package:reaction_trainer/screens/trainer_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
+class HomePage extends StatefulWidget {
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomePageState extends State<HomePage> {
+  List<String> history = []; // Armazena o histórico de tempos de reação
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: Text('Home', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
         centerTitle: true,
         backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TrainingScreen())),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Primeiro Container (Treinamento)
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TrainingPage(history: history)),
+                );
+              },
               child: Container(
                 width: MediaQuery.of(context).size.width/1.7,
                 height: MediaQuery.of(context).size.height/3.5,
@@ -36,15 +44,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Icon(Icons.sports_score, size: 150, color: Colors.red,),
-                    Text('Iniciar Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
-                  ],),
+                    Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
+                ],),
               ),
             ),
-          ),
-          Padding(padding: EdgeInsets.all(25)),
-          Center(
-            child: GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen())),
+            Padding(padding: EdgeInsets.all(25)),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HistoryPage(history: history)),
+                );
+              },
               child: Container(
                 width: MediaQuery.of(context).size.width/1.7,
                 height: MediaQuery.of(context).size.height/3.5,
@@ -57,14 +69,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Icon(Icons.history, size: 150, color: Colors.red,),
-                    Text('Ver Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
-                  ],),
+                    Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
+                ],),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
+// class HomeScreen extends StatefulWidget {
+//   const HomeScreen({super.key});
+
+//   @override
+//   State<HomeScreen> createState() => _HomeScreenState();
+// }
+
+// class _HomeScreenState extends State<HomeScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Home'),
+//         centerTitle: true,
+//         backgroundColor: Colors.red,
+//       ),
+//       body: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Center(
+//             child: GestureDetector(
+//               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TrainingPage(history: history))),
+//               child: Container(
+//                 width: MediaQuery.of(context).size.width/1.7,
+//                 height: MediaQuery.of(context).size.height/3.5,
+//                 decoration: BoxDecoration(
+//                   color: const Color.fromARGB(255, 197, 197, 197),
+//                   borderRadius: BorderRadius.circular(35),
+//                   boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 15, offset: Offset(4, 4))]
+//                 ),
+//                 child: const Column(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     Icon(Icons.sports_score, size: 150, color: Colors.red,),
+//                     Text('Iniciar Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
+//                   ],),
+//               ),
+//             ),
+//           ),
+//           Padding(padding: EdgeInsets.all(25)),
+//           Center(
+//             child: GestureDetector(
+//               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryScreen())),
+//               child: Container(
+//                 width: MediaQuery.of(context).size.width/1.7,
+//                 height: MediaQuery.of(context).size.height/3.5,
+//                 decoration: BoxDecoration(
+//                   color: const Color.fromARGB(255, 197, 197, 197),
+//                   borderRadius: BorderRadius.circular(35),
+//                   boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 15, offset: Offset(4, 4))]
+//                 ),
+//                 child: const Column(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     Icon(Icons.history, size: 150, color: Colors.red,),
+//                     Text('Ver Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
+//                   ],),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

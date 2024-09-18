@@ -1,0 +1,1 @@
+Os botões de Iniciar Treinamento e Parar a contagem dever alternar sua exibição na tela, quando o treinamento for iniciado o botão de iniciar desaparece e o de parar aparece, se o treinamento for interrompido o botão de parar some e o de iniciar aparece novamente

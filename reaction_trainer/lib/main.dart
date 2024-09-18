@@ -13,7 +13,7 @@ class ReactionTrainer extends StatelessWidget {
     return MaterialApp(
       title: 'Reaction Trainer',
       theme: ThemeData(colorSchemeSeed: Colors.purple, useMaterial3: true),
-      home: HomeScreen(),
+      home: HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

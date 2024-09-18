@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 
-class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+class HistoryPage extends StatelessWidget {
+  final List<String> history; // Modifiquei para armazenar também tentativas antecipadas
 
-  @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
-}
+  HistoryPage({required this.history});
 
-class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Histórico'),
+        title: Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
         centerTitle: true,
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
       ),
-      body: ListView(
-        children: [
-          ElevatedButton(onPressed: (){
-          }, child: Text('Teste'))
-        ],
+      body: Center(
+        child: history.isEmpty
+            ? Text('Nenhum histórico disponível')
+            : ListView.builder(
+                itemCount: history.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(history[index]),
+                  );
+                },
+              ),
       ),
     );
   }
