@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:reaction_trainer/themes/app_colors.dart';
 
 class TrainingPage extends StatefulWidget {
@@ -13,10 +14,10 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
-  List<Color> lampColors = List.filled(5, AppColors.lampOff); // Iniciar com todas as lâmpadas vermelhas
-  bool reactionStarted = false; // Verifica se o tempo de reação já começou
-  bool trainingStarted = false; // Verifica se o treinamento foi iniciado
-  int reactionTime = 0;
+  List<Color> lampColors = List.filled(5, AppColors.lampOff);
+  bool reactionStarted = false;
+  bool trainingStarted = false;
+  double reactionTime = 0;
   Timer? _timer;
   Stopwatch _stopwatch = Stopwatch();
   String errorMessage = '';
@@ -25,9 +26,9 @@ class _TrainingPageState extends State<TrainingPage> {
     setState(() {
       errorMessage = '';
       reactionTime = 0;
-      reactionStarted = false; // Reiniciar estado
-      trainingStarted = true;  // Treinamento está ativo
-      lampColors = List.filled(5, AppColors.lampOff); // Garantir que todas as lâmpadas voltem ao estado inicial (vermelhas)
+      reactionStarted = false;
+      trainingStarted = true;
+      lampColors = List.filled(5, AppColors.lampOff);
     });
 
     int index = 0;
@@ -41,7 +42,7 @@ class _TrainingPageState extends State<TrainingPage> {
         int randomSeconds = Random().nextInt(8) + 1;
         Future.delayed(Duration(seconds: randomSeconds), () {
           setState(() {
-            lampColors = List.filled(5, AppColors.lampOff); // Quando todas as lâmpadas ficam vermelhas, a contagem de reação começa
+            lampColors = List.filled(5, AppColors.lampOff);
             reactionStarted = true;
             _stopwatch.start();
           });
@@ -53,23 +54,27 @@ class _TrainingPageState extends State<TrainingPage> {
 
   void stopReaction() {
     if (!reactionStarted) {
-      // Se a contagem não começou, interrompe o treinamento
       _timer?.cancel();
       setState(() {
+        String formattedDate = DateFormat('dd-MM-yyyy – kk:mm:ss').format(DateTime.now());
         errorMessage = 'Tentativa antecipada! Treinamento interrompido.';
-        widget.history.add('Tentativa antecipada - Treinamento interrompido');
-        trainingStarted = false; // Treinamento foi interrompido
-        lampColors = List.filled(5, AppColors.lampOff); // Voltar as lâmpadas para o estado inicial ao interromper
+        widget.history.add('Tentativa antecipada - Treinamento interrompido em $formattedDate');
+        trainingStarted = false;
+        lampColors = List.filled(5, AppColors.lampOff);
       });
     } else {
-      // Reação válida
       _stopwatch.stop();
       setState(() {
-        reactionTime = _stopwatch.elapsedMilliseconds;
-        widget.history.add('Tempo de reação: ${reactionTime}ms');
-        reactionStarted = false; // Reinicia o estado para o próximo treinamento
-        trainingStarted = false;  // Treinamento foi concluído
-        lampColors = List.filled(5, AppColors.lampOff); // Voltar as lâmpadas para o estado inicial ao concluir
+        double reactionTimeInSeconds = _stopwatch.elapsedMilliseconds / 1000.0;
+        reactionTime = reactionTimeInSeconds;
+
+        // Adiciona data e hora ao histórico
+        String formattedDate = DateFormat('dd-MM-yyyy – kk:mm:ss').format(DateTime.now());
+        widget.history.add('Tempo de reação: ${reactionTimeInSeconds.toStringAsFixed(3)}s em $formattedDate');
+
+        reactionStarted = false;
+        trainingStarted = false;
+        lampColors = List.filled(5, AppColors.lampOff);
       });
       _stopwatch.reset();
     }
@@ -85,50 +90,100 @@ class _TrainingPageState extends State<TrainingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        title: Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
       ),
-      body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (reactionTime > 0) 
-              Text('Tempo de reação: ${reactionTime}ms', style: TextStyle(fontSize: 25),),
-            if (errorMessage.isNotEmpty) 
-              Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 25,), textAlign: TextAlign.center,),
-              SizedBox(height: 50,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: lampColors.map((color) {
-                return Container(
-                  // margin: EdgeInsets.all(10),
-                  width: MediaQuery.of(context).size.width/6,
-                  height: MediaQuery.of(context).size.width/6,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle
-                  ),
-                );
-              }).toList(),
+      body: Stack(
+        children: [
+          Positioned(
+            top: 100,
+            left: 10,
+            right: 10,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: lampColors.map((color) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width / 6,
+                      height: MediaQuery.of(context).size.width / 6,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
+              ],
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: !trainingStarted ? startTraining : null, // Desabilitar o botão enquanto o treinamento estiver ativo
-              child: Text('Iniciar Treinamento'),
+          ),
+          Positioned(
+            top: 10,
+            left: 10,
+            right: 10,
+            child: Column(
+              children: [
+                if (reactionTime > 0)
+                  Text('Tempo de reação: ${reactionTime.toStringAsFixed(3)}s', style: TextStyle(fontSize: 25)),
+                if (errorMessage.isNotEmpty)
+                  Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 25), textAlign: TextAlign.center),
+              ],
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: trainingStarted ? stopReaction : null, // O botão só estará habilitado se o treinamento tiver começado
-              child: Text('Parar'),
+          ),
+          Positioned(
+            bottom: 30,
+            left: 10,
+            right: 10,
+            child: GestureDetector(
+              onTapDown: (_) {
+                if (!trainingStarted) {
+                  startTraining();
+                } else {
+                  stopReaction();
+                }
+              },
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: 150,
+                  maxWidth: 150
+                ),
+                width: MediaQuery.of(context).size.width / 5,
+                height: MediaQuery.of(context).size.width / 5,
+                decoration: BoxDecoration(
+                  color: trainingStarted ? Colors.red : Colors.green,
+                  shape: BoxShape.circle,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      trainingStarted ? Icons.stop : Icons.play_arrow,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      trainingStarted ? 'Parar' : 'Iniciar',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
+
+
+
+
 
 
 

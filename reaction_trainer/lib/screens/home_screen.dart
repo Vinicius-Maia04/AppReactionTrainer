@@ -33,6 +33,10 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 250,
+                  minHeight: 186
+                ),
                 width: MediaQuery.of(context).size.width/1.7,
                 height: MediaQuery.of(context).size.height/3.5,
                 decoration: BoxDecoration(
@@ -58,6 +62,10 @@ class _HomePageState extends State<HomePage> {
                 );
               },
               child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 250,
+                  minHeight: 186
+                ),
                 width: MediaQuery.of(context).size.width/1.7,
                 height: MediaQuery.of(context).size.height/3.5,
                 decoration: BoxDecoration(
