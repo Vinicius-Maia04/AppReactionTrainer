@@ -88,6 +88,12 @@ class _TrainingPageState extends State<TrainingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final media_query = MediaQuery.of(context).size;
+    final screen_width = media_query.width;
+    final screen_height = media_query.height;
+
+    final is_mobile = screen_width < 600;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
@@ -95,91 +101,100 @@ class _TrainingPageState extends State<TrainingPage> {
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            top: 100,
-            left: 10,
-            right: 10,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: lampColors.map((color) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width / 6,
-                      height: MediaQuery.of(context).size.width / 6,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          width: screen_width,
+          height: screen_height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distribui o espaço verticalmente
+            children: [
+              Column(
+                children: [
+                  Container(
+                    height: is_mobile? 100 : 50,
+                    child: Column(
+                      children: [
+                        if (reactionTime > 0)
+                          Text('Tempo de reação: ${reactionTime.toStringAsFixed(3)}s', style: TextStyle(fontSize: 20)),
+                        if (errorMessage.isNotEmpty)
+                          Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 20), textAlign: TextAlign.center),
+                      ],
+                    )),
+                  SizedBox(height: 10), // Ajuste o espaçamento
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: lampColors.map((color) {
+                      return Container(
+                        width: screen_width / (is_mobile ? 6 : 8),
+                        height: screen_width / (is_mobile ? 6 : 8),
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTapDown: (_) {
+                  if (!trainingStarted) {
+                    startTraining();
+                  } else {
+                    stopReaction();
+                  }
+                },
+                child: Container(
+                  width: screen_width / (is_mobile ? 4 : 6),
+                  height: is_mobile ? (screen_width / 4) : screen_height / 8,
+                  decoration: BoxDecoration(
+                    color: trainingStarted ? Colors.red : Colors.green,
+                    shape: is_mobile ?
+                    BoxShape.circle
+                    : BoxShape.rectangle,
+                    borderRadius: is_mobile ?
+                    null : BorderRadius.circular(25)
+                  ),
+                  child:
+                  is_mobile
+                  ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        trainingStarted ? Icons.stop : Icons.play_arrow,
+                        size: 40,
+                        color: Colors.white,
                       ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: 20),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 10,
-            left: 10,
-            right: 10,
-            child: Column(
-              children: [
-                if (reactionTime > 0)
-                  Text('Tempo de reação: ${reactionTime.toStringAsFixed(3)}s', style: TextStyle(fontSize: 25)),
-                if (errorMessage.isNotEmpty)
-                  Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 25), textAlign: TextAlign.center),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 30,
-            left: 10,
-            right: 10,
-            child: GestureDetector(
-              onTapDown: (_) {
-                if (!trainingStarted) {
-                  startTraining();
-                } else {
-                  stopReaction();
-                }
-              },
-              child: Container(
-                constraints: BoxConstraints(
-                  maxHeight: 150,
-                  maxWidth: 150
-                ),
-                width: MediaQuery.of(context).size.width / 5,
-                height: MediaQuery.of(context).size.width / 5,
-                decoration: BoxDecoration(
-                  color: trainingStarted ? Colors.red : Colors.green,
-                  shape: BoxShape.circle,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      trainingStarted ? Icons.stop : Icons.play_arrow,
-                      size: 50,
-                      color: Colors.white,
-                    ),
-                    Text(
-                      trainingStarted ? 'Parar' : 'Iniciar',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ],
+                      Text(
+                        trainingStarted ? 'Parar' : 'Iniciar',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ],
+                  )
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        trainingStarted ? Icons.stop : Icons.play_arrow,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        trainingStarted ? 'Parar' : 'Iniciar',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ],
+                  )
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
-
 
 
 
