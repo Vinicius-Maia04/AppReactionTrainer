@@ -172,7 +172,9 @@ class _TrainingPageState extends State<TrainingPage> {
                     constraints: BoxConstraints(
                       maxWidth: 250
                     ),
-                    child: TextField(
+                    child: trainingStarted ?
+                    Text(nameController.text, style: TextStyle(fontSize: 25),)
+                    : TextField(
                       controller: nameController,
                       decoration: const InputDecoration(
                         hintText: 'Insira seu nome aqui',
@@ -185,7 +187,7 @@ class _TrainingPageState extends State<TrainingPage> {
                           borderSide: BorderSide(color: Colors.grey, width: 2)
                         )
                       ),
-                    ),
+                    )
                   ),
                 ],
               ),
