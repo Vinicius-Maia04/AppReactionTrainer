@@ -129,7 +129,7 @@ class _TrainingPageState extends State<TrainingPage> {
       appBar: AppBar(
         title: Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.nitroOrange,
         foregroundColor: Colors.white,
       ),
       body: Center(
@@ -137,6 +137,7 @@ class _TrainingPageState extends State<TrainingPage> {
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
           width: screen_width,
           height: screen_height,
+          color: AppColors.nitroBlue,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -147,7 +148,7 @@ class _TrainingPageState extends State<TrainingPage> {
                     child: Column(
                       children: [
                         if (reactionTime > 0)
-                          Text('Tempo de reação: ${reactionTime.toStringAsFixed(3)}s', style: TextStyle(fontSize: 20)),
+                          Text('Tempo de reação: ${reactionTime.toStringAsFixed(3)}s', style: TextStyle(fontSize: 20, color: Colors.white)),
                         if (errorMessage.isNotEmpty)
                           Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 20), textAlign: TextAlign.center),
                       ],
@@ -173,18 +174,21 @@ class _TrainingPageState extends State<TrainingPage> {
                       maxWidth: 250
                     ),
                     child: trainingStarted ?
-                    Text(nameController.text, style: TextStyle(fontSize: 25),)
+                    Text(nameController.text, style: TextStyle(fontSize: 25, color: Colors.white),)
                     : TextField(
                       controller: nameController,
+                      style: TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: 'Insira seu nome aqui',
+                        hintStyle: TextStyle(color: Colors.white),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                         labelText: 'Seu Nome',
+                        labelStyle: TextStyle(color: Colors.white),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 4)
+                          borderSide: BorderSide(color: Color.fromARGB(255, 255, 81, 0), width: 4)
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey, width: 2)
+                          borderSide: BorderSide(color: Colors.white, width: 2)
                         )
                       ),
                     )

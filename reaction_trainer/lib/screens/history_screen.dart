@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reaction_trainer/themes/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -66,21 +67,24 @@ class _HistoryPageState extends State<HistoryPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Limpar Histórico'),
-          content: Text('Você realmente deseja limpar todo o histórico?'),
+          backgroundColor: AppColors.nitroBlue,
+          title: Text('Limpar Histórico', style: TextStyle(color: Colors.white),),
+          content: Text('Você realmente deseja limpar todo o histórico?', style: TextStyle(color: Colors.white),),
           actions: [
             TextButton(
-              child: Text('Cancelar'),
+              child: Text('Cancelar', style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(AppColors.nitroLightBlue)),
             ),
             TextButton(
-              child: Text('Limpar'),
+              child: Text('Limpar', style: TextStyle(color: Colors.white),),
               onPressed: () {
                 clearHistory();
                 Navigator.of(context).pop();
               },
+              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(AppColors.nitroOrange)),
             ),
           ],
         );
@@ -90,77 +94,92 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final media_query = MediaQuery.of(context).size;
+    final screen_width = media_query.width;
+    final screen_height = media_query.height;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.nitroOrange,
         foregroundColor: Colors.white,
       ),
       body: Center(
-        child: history.isEmpty
-            ? Text('Nenhum Histórico disponível')
-            : Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    // Exibe o nome do usuário com o menor tempo de reação
-                    if (bestReactionTime != double.infinity)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Text(
-                          'Melhor Tempo: ${bestReactionTime.toStringAsFixed(3)}s por $bestUser',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+        child: Container(
+          width: screen_width,
+          height: screen_height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.nitroBlue, 
+                AppColors.powerGreen,
+                AppColors.nitroBlue],
+                begin: Alignment.bottomCenter,)
+          ),
+          child: history.isEmpty
+              ? Center(child: Text('Nenhum Histórico disponível', style: TextStyle(color: Colors.white, fontSize: 25),))
+              : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      // Exibe o nome do usuário com o menor tempo de reação
+                      if (bestReactionTime != double.infinity)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            'Melhor Tempo: ${bestReactionTime.toStringAsFixed(3)}s por $bestUser',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.powerGreen),
+                          ),
+                        ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: history.length,
+                          itemBuilder: (context, index) {
+                            // Inverte a ordem do histórico para exibir os mais recentes primeiro
+                            final item = history[history.length - 1 - index];
+                            return Card(
+                              color: AppColors.nitroLightBlue,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(item, style: TextStyle(fontSize: 18, color: Colors.white)),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: history.length,
-                        itemBuilder: (context, index) {
-                          // Inverte a ordem do histórico para exibir os mais recentes primeiro
-                          final item = history[history.length - 1 - index];
-                          return Card(
-                            color: const Color.fromARGB(255, 191, 191, 191),
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Text(item, style: TextStyle(fontSize: 18)),
-                            ),
-                          );
+                      // Botão para limpar o histórico
+                      GestureDetector(
+                        onTap: () {
+                          showClearHistoryDialog();
                         },
-                      ),
-                    ),
-                    // Botão para limpar o histórico
-                    GestureDetector(
-                      onTap: () {
-                        showClearHistoryDialog();
-                      },
-                      child: Container(
-                        constraints: BoxConstraints(
-                          minWidth: 180,
-                          maxWidth: 200,
-                          maxHeight: 50,
-                        ),
-                        height: MediaQuery.of(context).size.height / 8,
-                        width: MediaQuery.of(context).size.width / 4,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Limpar Histórico',
-                              style: TextStyle(fontSize: 18, color: Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                        child: Container(
+                          constraints: BoxConstraints(
+                            minWidth: 180,
+                            maxWidth: 200,
+                            maxHeight: 50,
+                          ),
+                          height: MediaQuery.of(context).size.height / 8,
+                          width: MediaQuery.of(context).size.width / 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.nitroOrange,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Limpar Histórico',
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
