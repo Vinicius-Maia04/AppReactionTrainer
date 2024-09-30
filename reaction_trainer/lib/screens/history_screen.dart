@@ -128,7 +128,8 @@ class _HistoryPageState extends State<HistoryPage> {
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: Text(
                             'Melhor Tempo: ${bestReactionTime.toStringAsFixed(3)}s por $bestUser',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.powerGreen),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.powerGreen,
+                                    shadows: <Shadow>[Shadow(offset: Offset(0, 0), blurRadius: 1.5, color: Colors.black,)]),
                           ),
                         ),
                       Expanded(
