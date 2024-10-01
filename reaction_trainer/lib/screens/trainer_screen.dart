@@ -18,6 +18,8 @@ class _TrainingPageState extends State<TrainingPage> {
   List<Color> lampColors = List.filled(5, AppColors.lampOff);
   bool reactionStarted = false;
   bool trainingStarted = false;
+  bool lightsShouldBeOn = false; // Controle de estado das luzes
+
   double reactionTime = 0;
   Timer? _timer;
   Stopwatch _stopwatch = Stopwatch();
@@ -43,6 +45,13 @@ class _TrainingPageState extends State<TrainingPage> {
       return;
     }
 
+    // Parar qualquer temporizador ou cronômetro ativo
+    _stopwatch.stop();
+    _stopwatch.reset();
+    _timer?.cancel();
+    lightsShouldBeOn = false; // Evitar que qualquer luz se acenda indevidamente
+
+    // Reiniciar todos os estados visuais e de controle
     setState(() {
       errorMessage = '';
       reactionTime = 0;
@@ -52,39 +61,45 @@ class _TrainingPageState extends State<TrainingPage> {
     });
 
     int index = 0;
+    lightsShouldBeOn = true;
+
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!lightsShouldBeOn) {
+        timer.cancel();
+        return;
+      }
+
       if (index < 5) {
         setState(() {
           lampColors[index] = AppColors.lampOn;
         });
         index++;
       } else {
-        int randomSeconds = Random().nextInt(8) + 1;
-        Future.delayed(Duration(seconds: randomSeconds), () {
-          setState(() {
-            lampColors = List.filled(5, AppColors.lampOff);
-            reactionStarted = true;
-            _stopwatch.start();
-          });
-        });
         timer.cancel();
+        int randomSeconds = Random().nextInt(8) + 1;
+        
+        Future.delayed(Duration(seconds: randomSeconds), () {
+          if (lightsShouldBeOn) {
+            setState(() {
+              lampColors = List.filled(5, AppColors.lampOff);
+              reactionStarted = true;
+              _stopwatch.start();
+            });
+          }
+        });
       }
     });
   }
 
+
+
   void stopReaction() {
-    if (!reactionStarted) {
-      _timer?.cancel();
-      setState(() {
-        String formattedDate = DateFormat('dd-MM-yyyy – kk:mm:ss').format(DateTime.now());
-        errorMessage = 'Tentativa antecipada! Treinamento interrompido.';
-        widget.history.add('${nameController.text} - Tentativa antecipada - Treinamento interrompido em $formattedDate');
-        saveHistory(widget.history);
-        trainingStarted = false;
-        lampColors = List.filled(5, AppColors.lampOff);
-      });
-    } else {
-      _stopwatch.stop();
+    // Parar todas as ações pendentes
+    lightsShouldBeOn = false;
+    _timer?.cancel();
+    _stopwatch.stop();
+
+    if (reactionStarted) {
       setState(() {
         double reactionTimeInSeconds = _stopwatch.elapsedMilliseconds / 1000.0;
         reactionTime = reactionTimeInSeconds;
@@ -96,9 +111,23 @@ class _TrainingPageState extends State<TrainingPage> {
         trainingStarted = false;
         lampColors = List.filled(5, AppColors.lampOff);
       });
-      _stopwatch.reset();
+    } else {
+      setState(() {
+        String formattedDate = DateFormat('dd-MM-yyyy – kk:mm:ss').format(DateTime.now());
+        errorMessage = 'Tentativa antecipada! Treinamento interrompido.';
+        widget.history.add('${nameController.text} - Tentativa antecipada - Treinamento interrompido em $formattedDate');
+        saveHistory(widget.history);
+        trainingStarted = false;
+        lampColors = List.filled(5, AppColors.lampOff);
+      });
     }
+
+    _stopwatch.reset();
   }
+
+
+
+
 
   Future<void> saveHistory(List<String> history) async {
     final prefs = await SharedPreferences.getInstance();

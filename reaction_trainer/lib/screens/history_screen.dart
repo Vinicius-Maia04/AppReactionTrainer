@@ -138,11 +138,44 @@ class _HistoryPageState extends State<HistoryPage> {
                           itemBuilder: (context, index) {
                             // Inverte a ordem do histórico para exibir os mais recentes primeiro
                             final item = history[history.length - 1 - index];
+                            final parts = item.split(' em ');
+                            final dataParte = parts.length > 1 ? parts[1] : ''; // Parte que contém a data
+                            final informacaoParte = parts[0]; // Parte que contém o nome e o tempo de reação
+
+                            final nameAndReaction = informacaoParte.split(' - ');
+                            final userName = nameAndReaction[0]; // Nome do usuário
+                            final reactionInfo = nameAndReaction.length > 1 ? nameAndReaction[1] : ''; // Tempo de reação ou outra informação
+
                             return Card(
                               color: AppColors.nitroLightBlue,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
-                                child: Text(item, style: TextStyle(fontSize: 18, color: Colors.white)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      userName,
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.nitroOrange),
+                                    ),
+                                    SizedBox(height: 5),
+                                    if (reactionInfo.isNotEmpty)
+                                      Text(
+                                        reactionInfo,
+                                        style: TextStyle(fontSize: 18, color: Colors.white),
+                                      ),
+                                    SizedBox(height: 5),
+                                    if (dataParte.isNotEmpty)
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            dataParte,
+                                            style: TextStyle(fontSize: 16, color: Colors.grey[300]),
+                                          ),
+                                        ],
+                                      ),
+                                  ],
+                                ),
                               ),
                             );
                           },
