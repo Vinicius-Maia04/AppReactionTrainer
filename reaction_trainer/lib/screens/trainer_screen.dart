@@ -45,13 +45,8 @@ class _TrainingPageState extends State<TrainingPage> {
       return;
     }
 
-    // Parar qualquer temporizador ou cronômetro ativo
-    _stopwatch.stop();
-    _stopwatch.reset();
-    _timer?.cancel();
-    lightsShouldBeOn = false; // Evitar que qualquer luz se acenda indevidamente
+    resetTrainingState(); // Resetar todos os estados antes de iniciar
 
-    // Reiniciar todos os estados visuais e de controle
     setState(() {
       errorMessage = '';
       reactionTime = 0;
@@ -61,8 +56,10 @@ class _TrainingPageState extends State<TrainingPage> {
     });
 
     int index = 0;
-    lightsShouldBeOn = true;
+    lightsShouldBeOn = true; // Acender as luzes
+    trainingStarted = true;
 
+    // Timer para acender as luzes
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (!lightsShouldBeOn) {
         timer.cancel();
@@ -76,27 +73,29 @@ class _TrainingPageState extends State<TrainingPage> {
         index++;
       } else {
         timer.cancel();
-        int randomSeconds = Random().nextInt(8) + 1;
-        
-        Future.delayed(Duration(seconds: randomSeconds), () {
-          if (lightsShouldBeOn) {
-            setState(() {
-              lampColors = List.filled(5, AppColors.lampOff);
-              reactionStarted = true;
-              _stopwatch.start();
-            });
-          }
+        startReactionTimer(); // Inicia o cronômetro após todas as luzes acenderem
+      }
+    });
+  }
+
+  void startReactionTimer() {
+    int randomSeconds = Random().nextInt(8) + 1; // Tempo aleatório antes de iniciar o treinamento
+
+    _timer = Timer(Duration(seconds: randomSeconds), () {
+      if (lightsShouldBeOn && trainingStarted) {
+        setState(() {
+          lampColors = List.filled(5, AppColors.lampOff);
+          reactionStarted = true;
+          _stopwatch.start();
         });
       }
     });
   }
 
-
-
   void stopReaction() {
-    // Parar todas as ações pendentes
     lightsShouldBeOn = false;
     _timer?.cancel();
+    trainingStarted = false; // Finaliza o treinamento
     _stopwatch.stop();
 
     if (reactionStarted) {
@@ -108,7 +107,6 @@ class _TrainingPageState extends State<TrainingPage> {
         widget.history.add('${nameController.text} - Tempo de reação: ${reactionTimeInSeconds.toStringAsFixed(3)}s em $formattedDate');
         saveHistory(widget.history);
         reactionStarted = false;
-        trainingStarted = false;
         lampColors = List.filled(5, AppColors.lampOff);
       });
     } else {
@@ -117,7 +115,6 @@ class _TrainingPageState extends State<TrainingPage> {
         errorMessage = 'Tentativa antecipada! Treinamento interrompido.';
         widget.history.add('${nameController.text} - Tentativa antecipada - Treinamento interrompido em $formattedDate');
         saveHistory(widget.history);
-        trainingStarted = false;
         lampColors = List.filled(5, AppColors.lampOff);
       });
     }
@@ -125,9 +122,17 @@ class _TrainingPageState extends State<TrainingPage> {
     _stopwatch.reset();
   }
 
-
-
-
+  void resetTrainingState() {
+    _stopwatch.stop();
+    _stopwatch.reset();
+    _timer?.cancel();
+    lightsShouldBeOn = false; // Garantir que as luzes estejam apagadas
+    reactionStarted = false; // Reiniciar o estado da reação
+    trainingStarted = false; // Reiniciar o estado de treinamento
+    lampColors = List.filled(5, AppColors.lampOff); // Resetar cores das luzes
+    errorMessage = ''; // Limpar mensagem de erro
+    reactionTime = 0; // Reiniciar o tempo de reação
+  }
 
   Future<void> saveHistory(List<String> history) async {
     final prefs = await SharedPreferences.getInstance();
@@ -251,23 +256,15 @@ class _TrainingPageState extends State<TrainingPage> {
                             ),
                             Text(
                               trainingStarted ? 'Parar' : 'Iniciar',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                              style: TextStyle(fontSize: 20, color: Colors.white),
                             ),
                           ],
                         )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              trainingStarted ? Icons.stop : Icons.play_arrow,
-                              size: 40,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              trainingStarted ? 'Parar' : 'Iniciar',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                            ),
-                          ],
+                      : Center(
+                          child: Text(
+                            trainingStarted ? 'Parar' : 'Iniciar',
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          ),
                         ),
                 ),
               ),
