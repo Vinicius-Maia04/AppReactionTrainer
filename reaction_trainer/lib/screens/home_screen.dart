@@ -20,11 +20,13 @@ class _HomePageState extends State<HomePage > {
     final is_mobile = screen_width < 600;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Home', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
-        centerTitle: true,
-        backgroundColor: AppColors.nitroOrange,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text('Home', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        centerTitle: true,
       ),
       body: Row(
         children: [
@@ -36,9 +38,9 @@ class _HomePageState extends State<HomePage > {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [AppColors.nitroBlue, 
-                      AppColors.powerGreen,
-                      AppColors.nitroBlue],
-                      begin: Alignment.bottomCenter,)
+                      AppColors.nitroOrange],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight)
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center, 
@@ -67,17 +69,12 @@ class _HomePageState extends State<HomePage > {
                               ),
                               width: MediaQuery.of(context).size.width/1.7,
                               height: MediaQuery.of(context).size.height/3.5,
+                              clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: AppColors.nitroOrange,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: const [BoxShadow(color: Colors.orangeAccent, blurRadius: 15, offset: Offset(4, 4))]
+                                shape: BoxShape.circle,
+                                boxShadow: const [BoxShadow(color: Colors.black, blurRadius: 15, offset: Offset(4, 4))]
                               ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.sports_score, size: 150, color: Color.fromARGB(255, 6, 0, 110)),
-                                  Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 6, 0, 110)),)
-                              ],),
+                              child: Image.asset('lib\\assets\\images\\TreinamentoButton.png', fit: BoxFit.scaleDown,)
                             ),
                           ),
                           Padding(padding: EdgeInsets.all(25)),
@@ -97,17 +94,12 @@ class _HomePageState extends State<HomePage > {
                               ),
                               width: MediaQuery.of(context).size.width/1.7,
                               height: MediaQuery.of(context).size.height/3.5,
+                              clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: AppColors.nitroOrange,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: const [BoxShadow(color: Colors.orangeAccent, blurRadius: 15, offset: Offset(4, 4))]
+                                shape: BoxShape.circle,
+                                boxShadow: const [BoxShadow(color: Colors.black, blurRadius: 15, offset: Offset(4, 4))]
                               ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.history, size: 150, color: Color.fromARGB(255, 6, 0, 110)),
-                                  Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 6, 0, 110)),)
-                              ],),
+                              child: Image.asset('lib\\assets\\images\\HistoricoButton.png', fit: BoxFit.scaleDown,)
                             ),
                           ),
                         ],
@@ -132,17 +124,12 @@ class _HomePageState extends State<HomePage > {
                               ),
                               width: MediaQuery.of(context).size.width/1.7,
                               height: MediaQuery.of(context).size.height/3.5,
+                              clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: AppColors.nitroOrange,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: const [BoxShadow(color: Colors.orangeAccent, blurRadius: 15, offset: Offset(4, 4))]
+                                shape: BoxShape.circle,
+                                boxShadow: const [BoxShadow(color: Colors.black, blurRadius: 15, offset: Offset(4, 4))]
                               ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.sports_score, size: 150, color: Color.fromARGB(255, 6, 0, 110)),
-                                  Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 6, 0, 110)),)
-                              ],),
+                              child: Image.asset('lib\\assets\\images\\TreinamentoButton.png', fit: BoxFit.scaleDown,)
                             ),
                           ),
                           Padding(padding: EdgeInsets.all(25)),
@@ -162,17 +149,12 @@ class _HomePageState extends State<HomePage > {
                               ),
                               width: MediaQuery.of(context).size.width/1.7,
                               height: MediaQuery.of(context).size.height/3.5,
+                              clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
-                                color: AppColors.nitroOrange,
-                                borderRadius: BorderRadius.circular(35),
-                                boxShadow: const [BoxShadow(color: Colors.orangeAccent, blurRadius: 15, offset: Offset(4, 4))]
+                                shape: BoxShape.circle,
+                                boxShadow: const [BoxShadow(color: Colors.black, blurRadius: 15, offset: Offset(4, 4))]
                               ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.history, size: 150, color: Color.fromARGB(255, 6, 0, 110)),
-                                  Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 6, 0, 110)),)
-                              ],),
+                              child: Image.asset('lib\\assets\\images\\HistoricoButton.png', fit: BoxFit.scaleDown,)
                             ),
                           ),
                           ],

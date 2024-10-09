@@ -160,23 +160,32 @@ class _TrainingPageState extends State<TrainingPage> {
     final is_mobile = screen_width < 600;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        backgroundColor: AppColors.nitroOrange,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text('Treinamento', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        centerTitle: true,
       ),
       body: Center(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
           width: screen_width,
           height: screen_height,
-          color: AppColors.nitroBlue,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.nitroBlue, 
+              AppColors.nitroOrange],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight)
+            ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 children: [
+                  Padding(padding: EdgeInsets.only(top: screen_height/8)),
                   Container(
                     height: is_mobile ? 100 : 50,
                     child: Column(

@@ -67,16 +67,16 @@ class _HistoryPageState extends State<HistoryPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.nitroBlue,
-          title: Text('Limpar Histórico', style: TextStyle(color: Colors.white),),
-          content: Text('Você realmente deseja limpar todo o histórico?', style: TextStyle(color: Colors.white),),
+          backgroundColor: Colors.white,
+          title: Text('Limpar Histórico', style: TextStyle(color: AppColors.powerGreen, fontWeight: FontWeight.bold),),
+          content: Text('Você realmente deseja limpar todo o histórico?', style: TextStyle(color: Colors.black),),
           actions: [
             TextButton(
               child: Text('Cancelar', style: TextStyle(color: Colors.white),),
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(AppColors.nitroLightBlue)),
+              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(AppColors.powerGreen)),
             ),
             TextButton(
               child: Text('Limpar', style: TextStyle(color: Colors.white),),
@@ -99,11 +99,13 @@ class _HistoryPageState extends State<HistoryPage> {
     final screen_height = media_query.height;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        backgroundColor: AppColors.nitroOrange,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text('Histórico', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        centerTitle: true,
       ),
       body: Center(
         child: Container(
@@ -112,16 +114,17 @@ class _HistoryPageState extends State<HistoryPage> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [AppColors.nitroBlue, 
-                AppColors.powerGreen,
-                AppColors.nitroBlue],
-                begin: Alignment.bottomCenter,)
-          ),
+              AppColors.nitroOrange],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight)
+            ),
           child: history.isEmpty
               ? Center(child: Text('Nenhum Histórico disponível', style: TextStyle(color: Colors.white, fontSize: 25),))
               : Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
+                      Padding(padding: EdgeInsets.only(top: screen_height/8)),
                       // Exibe o nome do usuário com o menor tempo de reação
                       if (bestReactionTime != double.infinity)
                         Padding(
@@ -147,7 +150,8 @@ class _HistoryPageState extends State<HistoryPage> {
                             final reactionInfo = nameAndReaction.length > 1 ? nameAndReaction[1] : ''; // Tempo de reação ou outra informação
 
                             return Card(
-                              color: AppColors.nitroLightBlue,
+                              color: Colors.white,
+                              shadowColor: Colors.black,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Column(
@@ -161,7 +165,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     if (reactionInfo.isNotEmpty)
                                       Text(
                                         reactionInfo,
-                                        style: TextStyle(fontSize: 18, color: Colors.white),
+                                        style: TextStyle(fontSize: 18, color: Colors.black),
                                       ),
                                     SizedBox(height: 5),
                                     if (dataParte.isNotEmpty)
@@ -170,7 +174,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         children: [
                                           Text(
                                             dataParte,
-                                            style: TextStyle(fontSize: 16, color: Colors.grey[300]),
+                                            style: TextStyle(fontSize: 16, color: AppColors.powerGreen),
                                           ),
                                         ],
                                       ),
@@ -195,7 +199,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           height: MediaQuery.of(context).size.height / 8,
                           width: MediaQuery.of(context).size.width / 4,
                           decoration: BoxDecoration(
-                            color: AppColors.nitroOrange,
+                            color: AppColors.lampOff,
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Column(
