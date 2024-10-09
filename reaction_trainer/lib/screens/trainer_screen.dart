@@ -185,7 +185,12 @@ class _TrainingPageState extends State<TrainingPage> {
             children: [
               Column(
                 children: [
-                  Padding(padding: EdgeInsets.only(top: screen_height/8)),
+                  Container(
+                    height: screen_height/8,
+                    constraints: BoxConstraints(
+                      minHeight: 75
+                    ),
+                  ),
                   Container(
                     height: is_mobile ? 100 : 50,
                     child: Column(
